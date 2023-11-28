@@ -110,6 +110,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#estimating-a-difference-in-population-means-for-independent-groups" id="toc-estimating-a-difference-in-population-means-for-independent-groups" class="nav-link" data-scroll-target="#estimating-a-difference-in-population-means-for-independent-groups"><span class="header-section-number">3.3</span> Estimating a Difference in Population Means for Independent Groups</a>
   <ul class="collapse">
   <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question"><span class="header-section-number">3.3.1</span> Research Question</a></li>
+  <li><a href="#unpooled-standard-error-formula" id="toc-unpooled-standard-error-formula" class="nav-link" data-scroll-target="#unpooled-standard-error-formula"><span class="header-section-number">3.3.2</span> Unpooled Standard Error Formula</a></li>
+  <li><a href="#degrees-of-freedom-formula" id="toc-degrees-of-freedom-formula" class="nav-link" data-scroll-target="#degrees-of-freedom-formula"><span class="header-section-number">3.3.3</span> Degrees of Freedom Formula</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#end" id="toc-end" class="nav-link" data-scroll-target="#end"><span class="header-section-number">4</span> End</a></li>
@@ -903,7 +905,85 @@ We fail to reject the null hypothesis, suggesting no significant difference in B
 <li><p><strong>Unpooled Approach</strong>: This method does not assume that the variances of the two populations are equal. It is used when the assumption of equal variances (homogeneity of variance) is not tenable.</p></li>
 </ol>
 <p>When calculating a confidence interval for the difference between two means, the choice between a pooled and unpooled approach depends on the results of a test for equal variances (such as Levene’s test or an F-test). If the test suggests that the variances are equal, a pooled approach is typically used, which leads to a simpler formula and a more precise confidence interval. If the variances are not equal, the unpooled approach is used, which adjusts the degrees of freedom and the standard error to account for the difference in variance.</p>
-<p>To translate these statistical approaches into practical application, if you provide data or require further elaboration on how these methods are implemented in statistical analysis, I can demonstrate that with appropriate Python code or further explanation.</p>
+<p><strong>Pooled approach</strong></p>
+<p>Pooled confidence intervals are appropriate when the two populations are assumed to have equal variances.</p>
+<p>The formula presented is:</p>
+<p><span class="math display">\[
+(\bar{x}_1 - \bar{x}_2) \pm t^* \cdot \sqrt{\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1 + n_2 - 2} \left( \frac{1}{n_1} + \frac{1}{n_2} \right)}
+\]</span></p>
+<p>In this formula:</p>
+<ul>
+<li><span class="math inline">\(\bar{x}_1\)</span> and <span class="math inline">\(\bar{x}_2\)</span> are the sample means.</li>
+<li><span class="math inline">\(s_1^2\)</span> and <span class="math inline">\(s_2^2\)</span> are the sample variances.</li>
+<li><span class="math inline">\(n_1\)</span> and <span class="math inline">\(n_2\)</span> are the sample sizes.</li>
+<li><span class="math inline">\(t^*\)</span> is the t-score from the t-distribution that corresponds to the desired confidence level.</li>
+<li><span class="math inline">\(n_1 + n_2 - 2\)</span> gives the degrees of freedom for the t-distribution.</li>
+</ul>
+<p>This approach assumes that the population variances are equal, which is why the variances are pooled together in the calculation.</p>
+<p>To interpret the results of the 95% confidence interval calculation for the difference in mean BMI between male and female Mexican-American adults, we use the final image you’ve uploaded which contains the summary statistics and the formula for the confidence interval.</p>
+<p>Here are the summary statistics given:</p>
+<ul>
+<li>Mean BMI for males: 23.57</li>
+<li>Mean BMI for females: 22.83</li>
+<li>Standard deviation for males: 6.24</li>
+<li>Standard deviation for females: 6.43</li>
+<li>Sample size for males: 258</li>
+<li>Sample size for females: 239</li>
+</ul>
+<p>The formula for the 95% confidence interval using the pooled variance approach is:</p>
+<p><span class="math display">\[
+(23.57 - 22.83) \pm 1.98 \cdot \sqrt{\frac{(258-1) \cdot 6.24^2 + (239-1) \cdot 6.43^2}{258+239-2} \left( \frac{1}{258} + \frac{1}{239} \right)}
+\]</span></p>
+<p>The $t^* $ value of 1.98 is the t-score corresponding to a 95% confidence interval for the given degrees of freedom (which would be $ 258+239-2 $ in this case).</p>
+<p>Let’s calculate the exact values for the confidence interval.</p>
+<p>The difference in the mean BMI between male and female Mexican-American adults is approximately 0.74. The 95% confidence interval for this difference ranges from approximately -0.38 to 1.86. This interval means we are 95% confident that the true difference in mean BMIs between the two populations lies within this range.</p>
+<p>Since the confidence interval includes zero, it suggests that there may not be a statistically significant difference in the mean BMI between male and female Mexican-American adults. If the interval had not included zero, it would indicate a significant difference.</p>
+<p>However, it’s important to note that while the confidence interval provides valuable information about the difference in means and its uncertainty, it does not test a specific hypothesis about the means being equal or not. For that, a hypothesis test such as an independent samples t-test would be more appropriate. Additionally, the fact that the confidence interval is not symmetric around the observed difference in means is a consequence of the sample sizes and variances from each group contributing differently to the pooled standard error.</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given values</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>average_weight_male <span class="op">=</span> <span class="fl">23.57</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>average_weight_female <span class="op">=</span> <span class="fl">22.83</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>standard_deviation_male <span class="op">=</span> <span class="fl">6.24</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>standard_deviation_female <span class="op">=</span> <span class="fl">6.43</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>sample_size_male <span class="op">=</span> <span class="dv">258</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>sample_size_female <span class="op">=</span> <span class="dv">239</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the pooled standard deviation</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>pooled_variance <span class="op">=</span> (((sample_size_male <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> standard_deviation_male <span class="op">**</span> <span class="dv">2</span>) <span class="op">+</span> </span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>                   ((sample_size_female <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> standard_deviation_female <span class="op">**</span> <span class="dv">2</span>)) <span class="op">/</span> (sample_size_male <span class="op">+</span> sample_size_female <span class="op">-</span> <span class="dv">2</span>)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>pooled_standard_deviation <span class="op">=</span> np.sqrt(pooled_variance)</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>standard_error <span class="op">=</span> np.sqrt(pooled_variance <span class="op">*</span> (<span class="dv">1</span><span class="op">/</span>sample_size_male <span class="op">+</span> <span class="dv">1</span><span class="op">/</span>sample_size_female))</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Degrees of freedom for the t-distribution</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>degrees_freedom <span class="op">=</span> sample_size_male <span class="op">+</span> sample_size_female <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the t-score for a 95% confidence interval (two-tailed test)</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>t_score <span class="op">=</span> stats.t.ppf(<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.025</span>, degrees_freedom)</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> t_score <span class="op">*</span> standard_error</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>difference_in_means <span class="op">=</span> average_weight_male <span class="op">-</span> average_weight_female</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>confidence_interval_lower <span class="op">=</span> difference_in_means <span class="op">-</span> margin_of_error</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>confidence_interval_upper <span class="op">=</span> difference_in_means <span class="op">+</span> margin_of_error</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the results</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Difference in Means: </span><span class="sc">{</span>difference_in_means<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Margin of Error: </span><span class="sc">{</span>margin_of_error<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"95% Confidence Interval: (</span><span class="sc">{</span>confidence_interval_lower<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>confidence_interval_upper<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Difference in Means: 0.74
+Margin of Error: 1.12
+95% Confidence Interval: (-0.38, 1.86)</code></pre>
+</div>
+</div>
+<p><strong>Unpooled approach</strong></p>
 <p>The image you have uploaded appears to show a slide from a statistical presentation on how to calculate unpooled confidence intervals for the difference between two sample means. The formula provided is the standard formula for an unpooled (also known as Welch’s) t-confidence interval, which is used when the two populations are assumed to have unequal variances.</p>
 <p>The formula for the confidence interval is given by:</p>
 <p><span class="math display">\[
@@ -911,7 +991,72 @@ We fail to reject the null hypothesis, suggesting no significant difference in B
 \]</span></p>
 <p>Here, <span class="math inline">\(\bar{x}_1\)</span> and <span class="math inline">\(\bar{x}_2\)</span> are the sample means, <span class="math inline">\(s_1^2\)</span> and <span class="math inline">\(s_2^2\)</span> are the sample variances, <span class="math inline">\(n_1\)</span> and <span class="math inline">\(n_2\)</span> are the sample sizes, and <span class="math inline">\(t^*\)</span> is the t-score from the t-distribution that corresponds to the desired confidence level.</p>
 <p>The degrees of freedom (<span class="math inline">\(df\)</span>) for the <span class="math inline">\(t^*\)</span> multiplier can be found using Welch’s approximation. If technology to calculate this is not available, the slide suggests a conservative approach can be taken by using the smaller of <span class="math inline">\(n_1 - 1\)</span> and <span class="math inline">\(n_2 - 1\)</span> (i.e., <span class="math inline">\(df = \min(n_1 - 1, n_2 - 1)\)</span>).</p>
-<p>test</p>
+<p>For the unpooled approach, we modify the calculation of the standard error and the degrees of freedom. This approach is used when we cannot assume that the two populations have equal variances. The steps involved are:</p>
+<ol type="1">
+<li><p><strong>Calculate the Standard Error</strong>: Unlike the pooled approach, the standard error in the unpooled approach is calculated separately for each group and then combined.</p></li>
+<li><p><strong>Degrees of Freedom</strong>: The Welch-Satterthwaite equation is used to approximate the degrees of freedom, as it accounts for the difference in variances and sample sizes of the two groups.</p></li>
+</ol>
+<p>Here’s the updated formula and Python code for the unpooled approach:</p>
+</section>
+<section id="unpooled-standard-error-formula" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="unpooled-standard-error-formula"><span class="header-section-number">3.3.2</span> Unpooled Standard Error Formula</h3>
+<p>The standard error for the difference in means is calculated as: <span class="math display">\[\text{Standard Error} = \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}\]</span> where $ s_1 $ and $ s_2 $ are the standard deviations of the two groups, and $ n_1 $ and $ n_2 $ are the sample sizes.</p>
+</section>
+<section id="degrees-of-freedom-formula" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="degrees-of-freedom-formula"><span class="header-section-number">3.3.3</span> Degrees of Freedom Formula</h3>
+<p>The degrees of freedom are approximated using the Welch-Satterthwaite equation: <span class="math display">\[df = \frac{\left( \frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} \right)^2}{\frac{(\frac{s_1^2}{n_1})^2}{n_1 - 1} + \frac{(\frac{s_2^2}{n_2})^2}{n_2 - 1}}\]</span></p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given values</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>average_weight_male <span class="op">=</span> <span class="fl">23.57</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>average_weight_female <span class="op">=</span> <span class="fl">22.83</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>standard_deviation_male <span class="op">=</span> <span class="fl">6.24</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>standard_deviation_female <span class="op">=</span> <span class="fl">6.43</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>sample_size_male <span class="op">=</span> <span class="dv">258</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>sample_size_female <span class="op">=</span> <span class="dv">239</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error (unpooled)</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>se_male <span class="op">=</span> standard_deviation_male <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> sample_size_male</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>se_female <span class="op">=</span> standard_deviation_female <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> sample_size_female</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>standard_error_unpooled <span class="op">=</span> np.sqrt(se_male <span class="op">+</span> se_female)</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Degrees of freedom (Welch-Satterthwaite equation)</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>df_unpooled <span class="op">=</span> ((se_male <span class="op">+</span> se_female) <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> <span class="op">\</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>              ((se_male <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> (sample_size_male <span class="op">-</span> <span class="dv">1</span>)) <span class="op">+</span> (se_female <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> (sample_size_female <span class="op">-</span> <span class="dv">1</span>)))</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the t-score for a 95% confidence interval (two-tailed test)</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>t_score_unpooled <span class="op">=</span> stats.t.ppf(<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.025</span>, df_unpooled)</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>margin_of_error_unpooled <span class="op">=</span> t_score_unpooled <span class="op">*</span> standard_error_unpooled</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>confidence_interval_lower_unpooled <span class="op">=</span> difference_in_means <span class="op">-</span> margin_of_error_unpooled</span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>confidence_interval_upper_unpooled <span class="op">=</span> difference_in_means <span class="op">+</span> margin_of_error_unpooled</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the results</span></span>
+<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Difference in Means: </span><span class="sc">{</span>difference_in_means<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Margin of Error (Unpooled): </span><span class="sc">{</span>margin_of_error_unpooled<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"95% Confidence Interval (Unpooled): (</span><span class="sc">{</span>confidence_interval_lower_unpooled<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>confidence_interval_upper_unpooled<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Difference in Means: 0.74
+Margin of Error (Unpooled): 1.12
+95% Confidence Interval (Unpooled): (-0.38, 1.86)</code></pre>
+</div>
+</div>
+<p>The results from the Python code can be interpreted as follows:</p>
+<ol type="1">
+<li><p><strong>Difference in Means</strong>: The calculated difference in means between the two groups (males and females, in this context) is 0.74. This suggests that, on average, the characteristic being measured (possibly weight, given the context) for males is 0.74 units higher than that for females.</p></li>
+<li><p><strong>Margin of Error (Unpooled)</strong>: The margin of error, calculated using the unpooled approach, is 1.12. This value provides an indication of the uncertainty associated with the difference in means. The larger the margin of error, the greater the uncertainty.</p></li>
+<li><p><strong>95% Confidence Interval (Unpooled)</strong>: The 95% confidence interval, ranging from -0.38 to 1.86, gives a range of values within which we can be 95% confident that the true difference in means lies. Since this interval includes both negative and positive values, it indicates that the data does not provide strong evidence for a definitive difference in the means of the two groups. In other words, while the average measure for males might be higher than for females, the statistical evidence is not strong enough to conclusively support this claim at the 95% confidence level.</p>
+<ul>
+<li>The inclusion of zero in this interval suggests that there’s a significant possibility that there might be no real difference in the characteristic being measured between the two groups.</li>
+</ul></li>
+</ol>
+<p>In summary, while the observed data shows a mean difference of 0.74 in favor of males, the statistical uncertainty (as shown by the margin of error and the confidence interval) is too high to conclusively state that this difference is significant. This is a common scenario in statistical analysis, where the observed effect (difference in means) is not sufficiently supported by the data to draw a firm conclusion, especially in the presence of variability (as indicated by the wide confidence interval).</p>
+<p>With 95% confidence, the difference in mean body mass index between males and females for all Mexican-American adults (ages 18 - 29) in the U.S. is estimated to be between -0.385 kg/m2 and 1.865 kg/m2.</p>
 </section>
 </section>
 </section>
