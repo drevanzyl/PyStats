@@ -103,6 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#population-means" id="toc-population-means" class="nav-link" data-scroll-target="#population-means"><span class="header-section-number">3</span> Population Means</a>
   <ul class="collapse">
   <li><a href="#one-mean" id="toc-one-mean" class="nav-link" data-scroll-target="#one-mean"><span class="header-section-number">3.1</span> One Mean</a></li>
+  <li><a href="#mean-difference-for-paired-data" id="toc-mean-difference-for-paired-data" class="nav-link" data-scroll-target="#mean-difference-for-paired-data"><span class="header-section-number">3.2</span> Mean Difference for Paired Data</a></li>
   </ul></li>
   <li><a href="#end" id="toc-end" class="nav-link" data-scroll-target="#end"><span class="header-section-number">4</span> End</a></li>
   </ul>
@@ -143,7 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="1"><span class="header-section-number">1</span> Setup</h1>
 <section id="packages" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="packages"><span class="header-section-number">1.1</span> Packages</h2>
-<div class="cell" data-execution_count="29">
+<div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
@@ -161,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="functions" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="functions"><span class="header-section-number">1.2</span> Functions</h2>
-<div class="cell" data-execution_count="30">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> round_values(numbers, precision):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Rounds a list of numbers to a given precision.</span></span>
@@ -196,50 +197,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><span class="math inline">\(n\)</span> is the sample size.</li>
 <li>The square root term <span class="math inline">\(\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}\)</span> calculates the standard error of the sample proportion.</li>
 </ul>
-<div class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'\hat</span><span class="sc">{p}</span><span class="vs"> \pm z \sqrt{\frac{\hat</span><span class="sc">{p}</span><span class="vs">(1 - \hat</span><span class="sc">{p}</span><span class="vs">)}</span><span class="sc">{n}</span><span class="vs">}'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle \hat{p} \pm z \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}\)</span></p>
-</div>
-</div>
-<div class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Given data</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> <span class="dv">540</span>  <span class="co"># number of parents who responded 'yes'</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>nobs <span class="op">=</span> <span class="dv">659</span>   <span class="co"># total number of parents asked</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the proportion</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>proportion <span class="op">=</span> count <span class="op">/</span> nobs</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion as per the new information</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>p_hat <span class="op">=</span> proportion</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of parents surveyed</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> nobs</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Z-score for 95% confidence</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> <span class="fl">1.96</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> np.sqrt(p_hat <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p_hat) <span class="op">/</span> n)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 95% confidence interval using the given formula</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>ci_lower <span class="op">=</span> p_hat <span class="op">-</span> z <span class="op">*</span> se</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="op">=</span> p_hat <span class="op">+</span> z <span class="op">*</span> se</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>round_values([p_hat, ci_lower, ci_upper], <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="32">
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Given data</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> <span class="dv">540</span>  <span class="co"># number of parents who responded 'yes'</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>nobs <span class="op">=</span> <span class="dv">659</span>   <span class="co"># total number of parents asked</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the proportion</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>proportion <span class="op">=</span> count <span class="op">/</span> nobs</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion as per the new information</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>p_hat <span class="op">=</span> proportion</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of parents surveyed</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> nobs</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Z-score for 95% confidence</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> <span class="fl">1.96</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> np.sqrt(p_hat <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p_hat) <span class="op">/</span> n)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 95% confidence interval using the given formula</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>ci_lower <span class="op">=</span> p_hat <span class="op">-</span> z <span class="op">*</span> se</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="op">=</span> p_hat <span class="op">+</span> z <span class="op">*</span> se</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>round_values([p_hat, ci_lower, ci_upper], <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0.82, 0.79, 0.85]</code></pre>
 </div>
 </div>
 </section>
 <section id="exact-binomial-method" class="level4" data-number="2.1.1.2">
 <h4 data-number="2.1.1.2" class="anchored" data-anchor-id="exact-binomial-method"><span class="header-section-number">2.1.1.2</span> Exact (Binomial) Method</h4>
-<div class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.stats.proportion <span class="im">import</span> proportion_confint</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 95% confidence interval for the proportion</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 'binom_test' is used for exact CI calculation appropriate for binomial distribution</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ci_low, ci_upp <span class="op">=</span> proportion_confint(count, nobs, alpha<span class="op">=</span><span class="fl">0.05</span>, method<span class="op">=</span><span class="st">'binom_test'</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>round_values([proportion, ci_low, ci_upp], <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.stats.proportion <span class="im">import</span> proportion_confint</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 95% confidence interval for the proportion</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 'binom_test' is used for exact CI calculation appropriate for binomial distribution</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ci_low, ci_upp <span class="op">=</span> proportion_confint(count, nobs, alpha<span class="op">=</span><span class="fl">0.05</span>, method<span class="op">=</span><span class="st">'binom_test'</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>round_values([proportion, ci_low, ci_upp], <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>[0.82, 0.79, 0.85]</code></pre>
 </div>
 </div>
@@ -250,22 +245,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="normal-approximation-method-1" class="level4" data-number="2.1.2.1">
 <h4 data-number="2.1.2.1" class="anchored" data-anchor-id="normal-approximation-method-1"><span class="header-section-number">2.1.2.1</span> Normal Approximation Method</h4>
 <p><span class="math display">\[MoE = \frac{{1}}{\sqrt{n}}\]</span></p>
-<div class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>moe <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>np.sqrt(<span class="dv">232</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>moe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="34">
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>moe <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>np.sqrt(<span class="dv">232</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>moe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>0.06565321642986127</code></pre>
 </div>
 </div>
 <section id="for-95-confidence" class="level5" data-number="2.1.2.1.1">
 <h5 data-number="2.1.2.1.1" class="anchored" data-anchor-id="for-95-confidence"><span class="header-section-number">2.1.2.1.1</span> For 95% Confidence</h5>
-<div class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'MoE = \frac</span><span class="sc">{{</span><span class="vs">1</span><span class="sc">}}</span><span class="vs">{\sqrt</span><span class="sc">{n}</span><span class="vs">}'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle MoE = \frac{{1}}{\sqrt{n}}\)</span></p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Margin of Error (MoE)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>MoE <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample size using the simplified formula from the image</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># n = (1 / MoE)^2</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> (<span class="dv">1</span> <span class="op">/</span> MoE)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The sample size should be a whole number</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(sample_size))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>1111</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="36">
+<div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Margin of Error (MoE)</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>MoE <span class="op">=</span> <span class="fl">0.03</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -277,57 +282,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(sample_size))</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="36">
-<pre><code>1111</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Margin of Error (MoE)</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>MoE <span class="op">=</span> <span class="fl">0.03</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample size using the simplified formula from the image</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># n = (1 / MoE)^2</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> (<span class="dv">1</span> <span class="op">/</span> MoE)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The sample size should be a whole number</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(sample_size))</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>1111</code></pre>
 </div>
 </div>
 </section>
 <section id="for-99-confidence" class="level5" data-number="2.1.2.1.2">
 <h5 data-number="2.1.2.1.2" class="anchored" data-anchor-id="for-99-confidence"><span class="header-section-number">2.1.2.1.2</span> For 99% Confidence</h5>
-<p><span class="math display">\[\hat{p} \pm Z^* \cdot \frac{1}{2\sqrt{n}}\]</span> <span class="math display">\[MoE = Z^* \cdot \frac{1}{2\sqrt{n}}\]</span> <span class="math display">\[n = \left( \frac{Z^*}{2 \cdot MoE} \right)^2\]</span></p>
-<div class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'\hat</span><span class="sc">{p}</span><span class="vs"> \pm Z^* \cdot \frac</span><span class="sc">{1}</span><span class="vs">{2\sqrt</span><span class="sc">{n}</span><span class="vs">}'</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'MoE = Z^* \cdot \frac</span><span class="sc">{1}</span><span class="vs">{2\sqrt</span><span class="sc">{n}</span><span class="vs">}'</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'n = \left( \frac{Z^*}{2 \cdot MoE} \right)^2'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle \hat{p} \pm Z^* \cdot \frac{1}{2\sqrt{n}}\)</span></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle MoE = Z^* \cdot \frac{1}{2\sqrt{n}}\)</span></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle n = \left( \frac{Z^*}{2 \cdot MoE} \right)^2\)</span></p>
-</div>
-</div>
-<div class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Values provided in the image</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Z_star <span class="op">=</span> <span class="fl">2.576</span>  <span class="co"># Z-score for 99% confidence</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>MoE <span class="op">=</span> <span class="fl">0.03</span>      <span class="co"># Margin of Error</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample size calculation</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> (Z_star <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> MoE)) <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Since sample size must be a whole number, round up</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>n_rounded <span class="op">=</span> math.ceil(n)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(n_rounded)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \hat{p} \pm Z^* \cdot \frac{1}{2\sqrt{n}} \\
+&amp; MoE = Z^* \cdot \frac{1}{2\sqrt{n}} \\
+&amp; n = \left( \frac{Z^*}{2 \cdot MoE} \right)^2 \\
+\end{align*}
+\]</span></p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Values provided in the image</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Z_star <span class="op">=</span> <span class="fl">2.576</span>  <span class="co"># Z-score for 99% confidence</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>MoE <span class="op">=</span> <span class="fl">0.03</span>      <span class="co"># Margin of Error</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample size calculation</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> (Z_star <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> MoE)) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Since sample size must be a whole number, round up</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>n_rounded <span class="op">=</span> math.ceil(n)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(n_rounded)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1844</code></pre>
 </div>
@@ -337,58 +318,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exact-method" class="level4" data-number="2.1.2.2">
 <h4 data-number="2.1.2.2" class="anchored" data-anchor-id="exact-method"><span class="header-section-number">2.1.2.2</span> Exact Method</h4>
 <p><span class="math inline">\(n = \left( \frac{Z_{\alpha/2} \times \sqrt{p(1-p)}}{MoE} \right)^2\)</span></p>
-<div class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'n = \left( \frac{Z_{\alpha/2} \times \sqrt{p(1-p)</span><span class="sc">}}{MoE}</span><span class="vs"> \right)^2'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle n = \left( \frac{Z_{\alpha/2} \times \sqrt{p(1-p)}}{MoE} \right)^2\)</span></p>
-</div>
-</div>
-<div class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Desired margin of error</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> <span class="fl">0.04</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For a 95% confidence interval, the z-score is approximately 1.96</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>z_score <span class="op">=</span> norm.ppf(<span class="fl">0.975</span>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Since the population proportion is unknown, we use the most conservative estimate, p = 0.5</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample size using the formula for margin of error</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> (z_score <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> p <span class="op">*</span> q) <span class="op">/</span> (margin_of_error <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Since sample size must be a whole number, we round up</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(sample_size) <span class="op">+</span> <span class="dv">1</span> <span class="cf">if</span> sample_size <span class="op">%</span> <span class="dv">1</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="bu">int</span>(sample_size)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="41">
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Desired margin of error</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> <span class="fl">0.04</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For a 95% confidence interval, the z-score is approximately 1.96</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>z_score <span class="op">=</span> norm.ppf(<span class="fl">0.975</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Since the population proportion is unknown, we use the most conservative estimate, p = 0.5</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample size using the formula for margin of error</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> (z_score <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> p <span class="op">*</span> q) <span class="op">/</span> (margin_of_error <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Since sample size must be a whole number, we round up</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(sample_size) <span class="op">+</span> <span class="dv">1</span> <span class="cf">if</span> sample_size <span class="op">%</span> <span class="dv">1</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="bu">int</span>(sample_size)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>601</code></pre>
 </div>
 </div>
 <p>What minimum sample size does the researcher need in order to create a 98% conservative confidence interval with a margin of error of no more than 3%?</p>
-<div class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Desired margin of error</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> <span class="fl">0.03</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For a 98% confidence interval, the z-score is approximately 2.33 (found using the ppf function)</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>z_score <span class="op">=</span> norm.ppf(<span class="fl">0.99</span>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Since the population proportion is unknown, we use the most conservative estimate, p = 0.5</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample size using the formula for margin of error</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> (z_score <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> p <span class="op">*</span> q) <span class="op">/</span> (margin_of_error <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Since sample size must be a whole number, we round up</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(sample_size) <span class="op">+</span> (sample_size <span class="op">%</span> <span class="dv">1</span> <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="42">
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Desired margin of error</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For a 98% confidence interval, the z-score is approximately 2.33 (found using the ppf function)</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>z_score <span class="op">=</span> norm.ppf(<span class="fl">0.99</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Since the population proportion is unknown, we use the most conservative estimate, p = 0.5</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample size using the formula for margin of error</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> (z_score <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> p <span class="op">*</span> q) <span class="op">/</span> (margin_of_error <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Since sample size must be a whole number, we round up</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="bu">int</span>(sample_size) <span class="op">+</span> (sample_size <span class="op">%</span> <span class="dv">1</span> <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>sample_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>1504</code></pre>
 </div>
 </div>
@@ -399,48 +374,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="2.2" class="anchored" data-anchor-id="two-proportions"><span class="header-section-number">2.2</span> Two Proportions</h2>
 <section id="estimating-a-difference-in-population-proportions" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="estimating-a-difference-in-population-proportions"><span class="header-section-number">2.2.1</span> Estimating a Difference in Population Proportions</h3>
-<div class="cell" data-execution_count="66">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'\text{Best Estimate} \pm \text</span><span class="sc">{MoE}</span><span class="vs">'</span>))</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'\hat</span><span class="sc">{p}</span><span class="vs">_1 - \hat</span><span class="sc">{p}</span><span class="vs">_2 \pm 1.96 \cdot \sqrt{\frac{\hat</span><span class="sc">{p}</span><span class="vs">_1(1-\hat</span><span class="sc">{p}</span><span class="vs">_1)}</span><span class="sc">{n_1}</span><span class="vs"> + \frac{\hat</span><span class="sc">{p}</span><span class="vs">_2(1-\hat</span><span class="sc">{p}</span><span class="vs">_2)}</span><span class="sc">{n_2}</span><span class="vs">}'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle \text{Best Estimate} \pm \text{MoE}\)</span></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle \hat{p}_1 - \hat{p}_2 \pm 1.96 \cdot \sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1} + \frac{\hat{p}_2(1-\hat{p}_2)}{n_2}}\)</span></p>
-</div>
-</div>
-<div class="cell" data-execution_count="65">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given sample sizes and number of successes</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>n1, x1 <span class="op">=</span> <span class="dv">988</span>, <span class="dv">543</span> <span class="co"># sample of white children</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>n2, x2 <span class="op">=</span> <span class="dv">247</span>, <span class="dv">91</span>  <span class="co"># sample of black children</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample proportions</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> x1 <span class="op">/</span> n1</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> x2 <span class="op">/</span> n2</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error for the difference in proportions</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> np.sqrt(p1 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p1) <span class="op">/</span> n1 <span class="op">+</span> p2 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p2) <span class="op">/</span> n2)</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the z-score for 95% confidence</span></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> norm.ppf(<span class="fl">0.975</span>)</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#z = 1.96</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>moE <span class="op">=</span> z <span class="op">*</span> se</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>ci_lower <span class="op">=</span> (p1 <span class="op">-</span> p2) <span class="op">-</span> moE</span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="op">=</span> (p1 <span class="op">-</span> p2) <span class="op">+</span> moE</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#ci_lower = 0.18 - moE</span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#ci_upper = 0.18 + moE</span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>round_values([p1 <span class="op">-</span> p2, p1, p2, z,moE, ci_lower, ci_upper], <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="65">
+<p><span class="math display">\[
+\text{Best Estimate} \pm \text{MoE} \\
+\hat{p}_1 - \hat{p}_2 \pm 1.96 \cdot \sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1} + \frac{\hat{p}_2(1-\hat{p}_2)}{n_2}}
+\]</span></p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given sample sizes and number of successes</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>n1, x1 <span class="op">=</span> <span class="dv">988</span>, <span class="dv">543</span> <span class="co"># sample of white children</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>n2, x2 <span class="op">=</span> <span class="dv">247</span>, <span class="dv">91</span>  <span class="co"># sample of black children</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample proportions</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> x1 <span class="op">/</span> n1</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> x2 <span class="op">/</span> n2</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error for the difference in proportions</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> np.sqrt(p1 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p1) <span class="op">/</span> n1 <span class="op">+</span> p2 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p2) <span class="op">/</span> n2)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the z-score for 95% confidence</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> norm.ppf(<span class="fl">0.975</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#z = 1.96</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>moE <span class="op">=</span> z <span class="op">*</span> se</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>ci_lower <span class="op">=</span> (p1 <span class="op">-</span> p2) <span class="op">-</span> moE</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="op">=</span> (p1 <span class="op">-</span> p2) <span class="op">+</span> moE</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co">#ci_lower = 0.18 - moE</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co">#ci_upper = 0.18 + moE</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>round_values([p1 <span class="op">-</span> p2, p1, p2, z,moE, ci_lower, ci_upper], <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>[0.1812, 0.5496, 0.3684, 1.96, 0.0677, 0.1135, 0.2489]</code></pre>
 </div>
 </div>
@@ -452,12 +420,175 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="3"><span class="header-section-number">3</span> Population Means</h1>
 <section id="one-mean" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="one-mean"><span class="header-section-number">3.1</span> One Mean</h2>
-<div class="cell" data-execution_count="67">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>display(Math(<span class="vs">r'\bar</span><span class="sc">{x}</span><span class="vs"> \pm t^* \left(\frac</span><span class="sc">{s}</span><span class="vs">{\sqrt</span><span class="sc">{n}</span><span class="vs">}\right)'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><span class="math inline">\(\displaystyle \bar{x} \pm t^* \left(\frac{s}{\sqrt{n}}\right)\)</span></p>
+<p><span class="math display">\[
+\bar{x} \pm t^* \left(\frac{s}{\sqrt{n}}\right)
+\]</span></p>
+<p>Mean = 82.48 inches</p>
+<p>Standard Deviation = 15.06 inches</p>
+<p><span class="math inline">\(n\)</span> = 25 observations &gt; <span class="math inline">\(t*\)</span> = 2.064</p>
+<p><span class="math display">\[
+\begin{align*}
+\bar{x} \pm t^* \left( \frac{s}{\sqrt{n}} \right) &amp;= 82.48 \pm 2.064 \left( \frac{15.06}{\sqrt{25}} \right) \\
+&amp;= 82.48 \pm 2.064(3.012) \\
+&amp;= 82.48 \pm 6.22 \\
+&amp; \text{(76.26 inches, 88.70 inches)}
+\end{align*}
+\]</span></p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> t</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your confidence level and degrees of freedom</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>confidence_level <span class="op">=</span> <span class="fl">0.95</span>  <span class="co"># for a 95% confidence interval</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>degrees_of_freedom <span class="op">=</span> sample_size <span class="op">-</span> <span class="dv">1</span>  <span class="co"># degrees of freedom</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the t-score</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The ppf function returns the inverse of the CDF (Cumulative Distribution Function)</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># The argument for the ppf function should be 1 minus half of the alpha level (1 - alpha/2)</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># because the t-distribution is symmetric, and we want the cumulative area from -t to t.</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>t_score <span class="op">=</span> t.ppf((<span class="dv">1</span> <span class="op">+</span> confidence_level) <span class="op">/</span> <span class="dv">2</span>, degrees_of_freedom)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">#t_score = 2.064</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"t-score for </span><span class="sc">{</span>confidence_level<span class="op">*</span><span class="dv">100</span><span class="sc">}</span><span class="ss">% confidence level and </span><span class="sc">{</span>degrees_of_freedom<span class="sc">}</span><span class="ss"> degrees of freedom: </span><span class="sc">{</span>t_score<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>t-score for 95.0% confidence level and 24 degrees of freedom: 2.0638985616280205</code></pre>
 </div>
 </div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Given values for the mean, t-score, standard deviation, and sample size</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> <span class="fl">82.48</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>standard_deviation <span class="op">=</span> <span class="fl">15.06</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> t_score <span class="op">*</span> (standard_deviation <span class="op">/</span> (sample_size <span class="op">**</span> <span class="fl">0.5</span>))</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="op">=</span> mean <span class="op">-</span> margin_of_error</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="op">=</span> mean <span class="op">+</span> margin_of_error</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Margin of Error: </span><span class="sc">{</span>margin_of_error<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean (95% CI): </span><span class="sc">{</span>mean<span class="sc">:.2f}</span><span class="ss"> (</span><span class="sc">{</span>lower_bound<span class="sc">:.2f}</span><span class="ss"> to </span><span class="sc">{</span>upper_bound<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Margin of Error: 6.22
+Mean (95% CI): 82.48 (76.26 to 88.70)</code></pre>
+</div>
+</div>
+</section>
+<section id="mean-difference-for-paired-data" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="mean-difference-for-paired-data"><span class="header-section-number">3.2</span> Mean Difference for Paired Data</h2>
+<blockquote class="blockquote">
+<p>Difference = older twin - younger twin<br>
+Difference in Twin Education<br>
+n = 340 observations<br>
+Minimum = -3.5 years<br>
+Maximum = 4 years<br>
+72.1% had a difference of 0 years<br>
+Mean = 0.0838 years<br>
+Standard Deviation = 0.7627 years</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>95% Confidence Interval Calculations<br>
+Best Estimate + Margin of Error<br>
+Sample mean difference + “a few” . estimated standard error<br>
+t*<br>
+t* multiplier comes from a t-distribution with n - 1 degrees of freedom<br>
+95% confidence<br>
+n= 25 &gt; t* = 2.064<br>
+n= 1000 &gt; t* = 1.962</p>
+</blockquote>
+<p><span class="math display">\[\begin{align*}
+\text{Sample mean difference} \ \bar{x}_d \pm t^* \left( \frac{s_d}{\sqrt{n}} \right) &amp; \\
+\text{For } n = 25, \ t^* = 2.064 \ \text{, so we have:} &amp; \\
+\bar{x}_d \pm 2.064 \left( \frac{s_d}{\sqrt{25}} \right) &amp; \\
+\text{If } \bar{x}_d = 82.48 \ \text{and} \ s_d = 15.06, \ \text{then:} &amp; \\
+82.48 \pm 2.064 \left( \frac{15.06}{\sqrt{25}} \right) &amp; \\
+82.48 \pm 2.064 \times 3.012 &amp; \\
+82.48 \pm 6.22 &amp;
+\end{align*}\]</span></p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> t</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given values</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">25</span>  <span class="co"># Sample size</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>confidence_level <span class="op">=</span> <span class="fl">0.95</span>  <span class="co"># Confidence level</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>s_d <span class="op">=</span> <span class="fl">15.06</span>  <span class="co"># Standard deviation of the differences</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>x_d_bar <span class="op">=</span> <span class="fl">82.48</span>  <span class="co"># Difference in sample means</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the t-score</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>degrees_of_freedom <span class="op">=</span> n <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>t_score <span class="op">=</span> t.ppf((<span class="dv">1</span> <span class="op">+</span> confidence_level) <span class="op">/</span> <span class="dv">2</span>, degrees_of_freedom)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error of the mean difference</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>se_d <span class="op">=</span> s_d <span class="op">/</span> np.sqrt(n)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> t_score <span class="op">*</span> se_d</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="op">=</span> x_d_bar <span class="op">-</span> margin_of_error</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="op">=</span> x_d_bar <span class="op">+</span> margin_of_error</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results in a publication-friendly format</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sample Mean Difference: </span><span class="sc">{</span>x_d_bar<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Margin of Error: </span><span class="sc">{</span>margin_of_error<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"95% Confidence Interval: (</span><span class="sc">{</span>lower_bound<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>upper_bound<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample Mean Difference: 82.48
+Margin of Error: 6.22
+95% Confidence Interval: (76.26, 88.70)</code></pre>
+</div>
+</div>
+<p><span class="math display">\[\begin{align*}
+\text{Mean Difference Confidence Interval} \\
+\text{Mean} &amp;= 0.084 \text{ years} \\
+\text{Standard Deviation} &amp;= 0.76 \text{ years} \\
+n &amp;= 340 \text{ observations} \rightarrow t^* = 1.967 \\
+\end{align*}\]</span></p>
+<p><span class="math display">\[\begin{align*}
+\bar{x}_d \pm t^* \left( \frac{s_d}{\sqrt{n}} \right) &amp;= 0.084 \pm 1.967 \left( \frac{0.76}{\sqrt{340}} \right) \\
+&amp;= 0.084 \pm 1.967 (0.04) \\
+&amp;= 0.084 \pm 0.0814 \\
+&amp;= (0.0026, 0.1654) \text{ years}
+\end{align*}\]</span></p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> t</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given values from the image</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>mean_diff <span class="op">=</span> <span class="fl">0.084</span>  <span class="co"># Mean difference (x̄_d)</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>std_dev_diff <span class="op">=</span> <span class="fl">0.76</span>  <span class="co"># Standard deviation of differences (s_d)</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">340</span>  <span class="co"># Sample size (n)</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>confidence_level <span class="op">=</span> <span class="fl">0.95</span>  <span class="co"># Confidence level for 95%</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the t-score using the degrees of freedom (n - 1)</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>degrees_of_freedom <span class="op">=</span> n <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#t_score = t.ppf((1 + confidence_level) / 2, degrees_of_freedom)</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>t_score <span class="op">=</span> <span class="fl">1.967</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the standard error of the mean difference</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>standard_error_diff <span class="op">=</span> std_dev_diff <span class="op">/</span> np.sqrt(n)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the margin of error</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>margin_of_error <span class="op">=</span> t_score <span class="op">*</span> standard_error_diff</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the confidence interval</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="op">=</span> mean_diff <span class="op">-</span> margin_of_error</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="op">=</span> mean_diff <span class="op">+</span> margin_of_error</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sample Mean Difference: </span><span class="sc">{</span>mean_diff<span class="sc">}</span><span class="ss"> years"</span>)</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Margin of Error: </span><span class="sc">{</span>margin_of_error<span class="sc">:.4f}</span><span class="ss"> years"</span>)</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"95% Confidence Interval: (</span><span class="sc">{</span>lower_bound<span class="sc">:.4f}</span><span class="ss">, </span><span class="sc">{</span>upper_bound<span class="sc">:.4f}</span><span class="ss">) years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample Mean Difference: 0.084 years
+Margin of Error: 0.0811 years
+95% Confidence Interval: (0.0029, 0.1651) years</code></pre>
+</div>
+</div>
+<p>With 95% confidence, the population mean difference of the older twin’s less the younger twin’s self-reported education is estimated to be between lower_bound years and upper_bound years.</p>
 </section>
 </section>
 <section id="end" class="level1" data-number="4">
