@@ -1090,7 +1090,7 @@ Margin of Error (Unpooled): 1.12
 </ol>
 <p>The figure supports these points by showing that: - As the sample size increases (from n = 500 to n = 5000), the sampling distributions become narrower, indicating lower standard errors. - As the cluster size increases (from no clusters to clusters of size 50), the sampling distributions become wider, indicating higher standard errors.</p>
 <p>In conclusion, to achieve more precise estimates with smaller standard errors, one must consider the variability of the data, ensure a sufficiently large and well-stratified sample, carefully manage the cluster effects, and appropriately use sampling weights.</p>
-<div class="cell" data-execution_count="33">
+<div class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to simulate sampling distributions and plot the results with fixed scales</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_sampling_distributions_fixed_scales(n_samples, cluster_sizes, n_simulations<span class="op">=</span><span class="dv">10000</span>):</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting a random seed for reproducibility</span></span>
@@ -1101,7 +1101,7 @@ Margin of Error (Unpooled): 1.12
 <span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Defining the true population mean and standard deviation</span></span>
 <span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    population_mean <span class="op">=</span> <span class="dv">25</span></span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    population_std <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    population_std <span class="op">=</span> <span class="dv">15</span></span>
 <span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial values for fixed axes scales</span></span>
 <span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    y_max <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Will store the maximum y-value to set the same scale for y-axis across all plots</span></span>
@@ -1130,7 +1130,7 @@ Margin of Error (Unpooled): 1.12
 <span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>            x_max <span class="op">=</span> <span class="bu">max</span>(x_max, bins.<span class="bu">max</span>())  <span class="co"># Update x_max if needed</span></span>
 <span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use the found y_max to set y-axis limit, and (x_min, x_max) for x-axis limit</span></span>
-<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a>    y_max <span class="op">=</span> y_max <span class="op">/</span> n_simulations <span class="op">*</span> <span class="fl">30.1</span>  <span class="co"># Convert count to density and add some padding</span></span>
+<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a>    y_max <span class="op">=</span> y_max <span class="op">/</span> n_simulations <span class="op">*</span> <span class="fl">20.5</span>  <span class="co"># Convert count to density and add some padding</span></span>
 <span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a>    x_range <span class="op">=</span> (x_min, x_max)</span>
 <span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Second pass to plot with fixed scales</span></span>
@@ -1185,8 +1185,7 @@ Margin of Error (Unpooled): 1.12
 <span id="cb43-92"><a href="#cb43-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the figure with fixed scales</span></span>
 <span id="cb43-93"><a href="#cb43-93" aria-hidden="true" tabindex="-1"></a>fig_fixed_scales <span class="op">=</span> simulate_sampling_distributions_fixed_scales(n_samples, cluster_sizes)</span>
 <span id="cb43-94"><a href="#cb43-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-95"><a href="#cb43-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the figure</span></span>
-<span id="cb43-96"><a href="#cb43-96" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-95"><a href="#cb43-95" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="PyStats_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
 </div>
